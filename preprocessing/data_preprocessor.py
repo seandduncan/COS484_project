@@ -20,7 +20,7 @@ def remove_amp(tweets):
 def process_hashtag_punctuation(hashtag):
     for char in string.punctuation:
         if char == "#":
-            hashtag = hashtag.replace(char, "HASHTAG")
+            hashtag = hashtag.replace(char, "HASHTAG ")
         elif char == "'":
             hashtag = hashtag.replace(char, "")
         else:
@@ -183,6 +183,11 @@ def process_hastags(tweet):
 
 
 if __name__ == "__main__":
-    tweets = get_olid_data()["tweet"]
-    for tweet in tqdm(list(remove_amp(tweets))):
-        print(process_hastags(tweet))
+    df = get_olid_data()
+    tweets = list(df["tweet"])
+    for i in tqdm(range(len(remove_amp(tweets)))):
+        tweets[i] = process_hastags(tweets[i])
+    # Now tweets are
+    df["tweet"] = tweets
+
+    df.to_csv("olid-preprocessed.tsv", sep="\t", columns=df.columns)
